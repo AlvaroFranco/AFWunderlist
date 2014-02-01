@@ -11,7 +11,7 @@ AFWunderlist is on [CocoaPods](http://cocoapods.org), so you can get the pod by 
 
 ###Usage
 
-In order to use AFWunderlist, you also need to import to your project [AFNetworking](https://github.com/AFNetworking/AFNetworking), by [Mattt](https://twitter.com/mattt). Done this, you have to import the WLClient class into your class or classes.
+In order to use AFWunderlist, you also need to import to your project [AFNetworking](https://github.com/AFNetworking/AFNetworking), by [Mattt](https://twitter.com/mattt). If you're using CocoaPods, AFNetworking will be installed for you. Done this, you have to import the WLClient class into your class or classes.
 
     #import "WLClient.h"
 
