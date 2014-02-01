@@ -50,7 +50,7 @@
     NSDictionary *params = @{@"email": email, @"password": pass};
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager POST:[NSString stringWithFormat:@"%@/me/login",_baseURL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager POST:[NSString stringWithFormat:@"%@/login",_baseURL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([responseObject objectForKey:@"id"]) {
             [[NSUserDefaults standardUserDefaults]setValue:[responseObject objectForKey:@"token"] forKey:@"afwunderlisttoken"];
             [[NSUserDefaults standardUserDefaults]setInteger:1 forKey:@"afwunderlistlogin"];
@@ -99,7 +99,7 @@
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at getListWithID:andCompletion: method: %@", error);
+            NSLog(@"Error at deleteListWithID:andCompletion: method: %@", error);
             completion(NO);
         }];
     } else {
@@ -120,7 +120,7 @@
         [manager POST:[NSString stringWithFormat:@"%@/me/lists",_baseURL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at getListWithID:andCompletion: method: %@", error);
+            NSLog(@"Error at createNewListWithTitle:andCompletion: method: %@", error);
             completion(NO);
         }];
     } else {
@@ -161,13 +161,7 @@
         [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
         [manager GET:[NSString stringWithFormat:@"%@/me/tasks",_baseURL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
-            NSMutableDictionary *tasks = [[NSMutableDictionary alloc]init];
-            for (NSDictionary *dict in responseObject) {
-                if (![dict objectForKey:@"parent_id"]) {
-                    [tasks addEntriesFromDictionary:dict];
-                }
-            }
-            completion([NSDictionary dictionaryWithDictionary:tasks], YES);
+            completion(responseObject, YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Error at getTaskWithCompletion: method: %@", error);
             completion(nil, NO);
@@ -191,7 +185,7 @@
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at getTaskWithCompletion: method: %@", error);
+            NSLog(@"Error at createTaskWithTitle:insideList:withCompletion: method: %@", error);
             completion(NO);
         }];
     } else {
@@ -213,7 +207,7 @@
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at getTaskWithCompletion: method: %@", error);
+            NSLog(@"Error at createComment:atTask:withCompletion: method: %@", error);
             completion(NO);
         }];
     } else {
@@ -234,7 +228,7 @@
             
             completion(responseObject, YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at getCommentsTaskWithID:andCompletion: method: %@", error);
+            NSLog(@"Error at getTaskCommentsWithID:andCompletion: method: %@", error);
             completion(nil, NO);
         }];
     } else {
@@ -255,7 +249,7 @@
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at getListWithID:andCompletion: method: %@", error);
+            NSLog(@"Error at deleteTaskWithID:andCompletion: method: %@", error);
             completion(NO);
         }];
     } else {
@@ -323,7 +317,7 @@
             
             completion(responseObject,YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at createReminderAtTaskWithID:withDate:andCompletion: method: %@", error);
+            NSLog(@"Error at getUserBasicInformationWithCompletion: method: %@", error);
             completion(nil, NO);
         }];
     } else {
@@ -344,7 +338,7 @@
             
             completion(responseObject,YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at createReminderAtTaskWithID:withDate:andCompletion: method: %@", error);
+            NSLog(@"Error at getUserFriendsWithCompletion: method: %@", error);
             completion(nil, NO);
         }];
     } else {
@@ -365,7 +359,7 @@
             
             completion(responseObject,YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at createReminderAtTaskWithID:withDate:andCompletion: method: %@", error);
+            NSLog(@"Error at getUserSettingsWithCompletion: method: %@", error);
             completion(nil, NO);
         }];
     } else {
