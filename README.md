@@ -5,7 +5,7 @@ A Wunderlist API wrapper for Objective-C
 
 ###Usage
 
-In order to use AFWunderlist, you also need to import to your project AFNetworking, by Mattt. Done this, you have to import the WLClient class into your class or classes.
+In order to use AFWunderlist, you also need to import to your project [AFNetworking](https://github.com/AFNetworking/AFNetworking), by [Mattt](https://twitter.com/mattt). Done this, you have to import the WLClient class into your class or classes.
 
     #import "WLClient.h"
 
