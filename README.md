@@ -37,7 +37,7 @@ Here you have all the methods that are available by the moment:
 
     loginWithEmail:(NSString *)email andPassword:(NSString *)pass withCompletion:(statusBlock)completion;
 
-Returns a token that AFWunderlist will use for make all the requests
+Returns a token that AFWunderlist will use for making all the requests
 
     getUserBasicInformationWithCompletion:(responseBlock)completion;
 
@@ -106,7 +106,7 @@ Delete a task by passing the method the task ID that you want to delete
 Returns a dictionary with all the reminders
 
     createReminderAtTaskWithID:(NSString *)taskID withDate:(NSDate *)date andCompletion:(statusBlock)completion;
-    
+
 Create a comment inside a task by passing the method the task ID and the date
 
 ###License
