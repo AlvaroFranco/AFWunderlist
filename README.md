@@ -7,7 +7,7 @@ A Wunderlist API wrapper for Objective-C
 
 AFWunderlist is on [CocoaPods](http://cocoapods.org), so you can get the pod by adding this line to your Podfile
 
-    pod 'AFWunderlist'
+    pod 'AFWunderlist', '~> 1.1'
 
 ###Usage
 
