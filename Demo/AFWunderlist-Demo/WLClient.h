@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AFHTTPRequestOperationManager.h"
 
-@interface WLClient : NSObject
-
-@property (nonatomic, strong) NSString *baseURL;
+@interface WLClient : AFHTTPRequestOperationManager
 
 typedef void (^statusBlock)(BOOL success);
 typedef void (^responseBlock)(NSDictionary *response, BOOL success);

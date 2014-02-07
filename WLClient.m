@@ -7,14 +7,13 @@
 //
 
 #import "WLClient.h"
-#import "AFHTTPRequestOperationManager.h"
 
 @implementation WLClient
 
 -(id)init {
     
     if (self == [super init]) {
-        _baseURL = @"https://api.wunderlist.com";
+        //init callback
     }
     return self;
 }
@@ -24,8 +23,7 @@
     static WLClient *sharedWLClient = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
-        sharedWLClient = [[WLClient alloc] init];
-        
+        sharedWLClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:@"https://api.wunderlist.com"]];
     });
     
     return sharedWLClient;
@@ -49,8 +47,7 @@
     
     NSDictionary *params = @{@"email": email, @"password": pass};
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager POST:[NSString stringWithFormat:@"%@/login",_baseURL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [self POST:[NSString stringWithFormat:@"/login"] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([responseObject objectForKey:@"id"]) {
             [[NSUserDefaults standardUserDefaults]setValue:[responseObject objectForKey:@"token"] forKey:@"afwunderlisttoken"];
             [[NSUserDefaults standardUserDefaults]setInteger:1 forKey:@"afwunderlistlogin"];
@@ -72,9 +69,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager GET:[NSString stringWithFormat:@"%@/me/lists",_baseURL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self GET:[NSString stringWithFormat:@"/me/lists"] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
             completion(responseObject, YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -93,9 +89,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager DELETE:[NSString stringWithFormat:@"%@/me/%@",_baseURL,listID] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self DELETE:[NSString stringWithFormat:@"/me/%@",listID] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -115,9 +110,8 @@
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         NSDictionary *params = @{@"title": title};
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager POST:[NSString stringWithFormat:@"%@/me/lists",_baseURL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self POST:[NSString stringWithFormat:@"/me/lists"] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Error at createNewListWithTitle:andCompletion: method: %@", error);
@@ -136,13 +130,12 @@
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         NSDictionary *params = @{@"email": email};
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager POST:[NSString stringWithFormat:@"%@/%@/shares",_baseURL,listID] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self POST:[NSString stringWithFormat:@"/%@/shares",listID] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error at getListSharesWithID:andCompletion: method: %@", error);
+            NSLog(@"Error at shareListWithID:andCompletion: method: %@", error);
             completion(NO);
         }];
     } else {
@@ -157,9 +150,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager GET:[NSString stringWithFormat:@"%@/me/tasks",_baseURL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self GET:[NSString stringWithFormat:@"/me/tasks"] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(responseObject, YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -179,9 +171,8 @@
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         NSDictionary *params = @{@"list_id": listID, @"title": title};
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager POST:[NSString stringWithFormat:@"%@/me/tasks",_baseURL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self POST:[NSString stringWithFormat:@"/me/tasks"] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -201,9 +192,8 @@
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         NSDictionary *params = @{@"channel_id": taskID, @"channel_type": @"tasks", @"text": comment};
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager POST:[NSString stringWithFormat:@"%@/tasks/%@/messages",_baseURL,taskID] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self POST:[NSString stringWithFormat:@"/tasks/%@/messages",taskID] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -222,9 +212,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager GET:[NSString stringWithFormat:@"%@/tasks/%@/messages",_baseURL,taskID] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self GET:[NSString stringWithFormat:@"/tasks/%@/messages",taskID] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(responseObject, YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -243,9 +232,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager DELETE:[NSString stringWithFormat:@"%@/me/%@",_baseURL,taskID] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self DELETE:[NSString stringWithFormat:@"/me/%@",taskID] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -264,9 +252,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager GET:[NSString stringWithFormat:@"%@/me/reminders",_baseURL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self GET:[NSString stringWithFormat:@"/me/reminders"] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(responseObject, YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -290,9 +277,8 @@
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         NSDictionary *params = @{@"task_id": taskID, @"date": ISODate};
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager POST:[NSString stringWithFormat:@"%@/me/reminders",_baseURL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self POST:[NSString stringWithFormat:@"/me/reminders"] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -311,9 +297,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager GET:[NSString stringWithFormat:@"%@/me",_baseURL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self GET:[NSString stringWithFormat:@"/me"] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(responseObject,YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -332,9 +317,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager GET:[NSString stringWithFormat:@"%@/me/friends",_baseURL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self GET:[NSString stringWithFormat:@"/me/friends"] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(responseObject,YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -353,9 +337,8 @@
         
         NSString *token = [[NSUserDefaults standardUserDefaults]valueForKey:@"afwunderlisttoken"];
         
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
-        [manager GET:[NSString stringWithFormat:@"%@/me/settings",_baseURL] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+        [self GET:[NSString stringWithFormat:@"/me/settings"] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             completion(responseObject,YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
