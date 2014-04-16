@@ -3,13 +3,13 @@ AFWunderlist
 
 A Wunderlist API wrapper for Objective-C
 
-###CocoaPods
+##CocoaPods
 
 AFWunderlist is on [CocoaPods](http://cocoapods.org), so you can get the pod by adding this line to your Podfile
 
     pod 'AFWunderlist', '~> 1.1'
 
-###Usage
+##Usage
 
 In order to use AFWunderlist, you also need to import to your project [AFNetworking](https://github.com/AFNetworking/AFNetworking), by [Mattt](https://twitter.com/mattt). If you're using CocoaPods, AFNetworking will be installed for you. Done this, you have to import the WLClient class into your class or classes.
 
@@ -23,7 +23,7 @@ Then, use the shared client to run your methods (almost all methods use blocks).
 
 With this you're ready to go!
 
-###Methods
+##Methods
 
 All the methods are executed like that
 
@@ -115,10 +115,9 @@ Returns a dictionary with all the reminders
 
 Create a comment inside a task by passing the method the task ID and the date
 
-###License
+##License
 
 AFWunderlist is under MIT License.
 
-###Contact
-#####Author: Alvaro Franco
-#####email: <mailto:alvarofrancoayala@gmail.com>
+##Contact
+Made by Alvaro Franco. If you have any question, feel free to drop me a line at [alvarofrancoayala@gmail.com](mailto:alvarofrancoayala@gmail.com)
