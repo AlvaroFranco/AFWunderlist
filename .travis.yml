@@ -2,4 +2,4 @@ language: objective-c
 brefore_install:
      - brew update
      - brew install xctool
-script: xctool -workspace Demo/AFWunderlist-Demo.xcworkspace -scheme AFWunderlist-Demo -sdk iphonesimulator7.0 ONLY_ACTIVE_ARCH=NO TEST_AFTER_BUILD=YES clean build
+script: xctool -project Demo/AFWunderlist-Demo.xcproject -scheme AFWunderlist-Demo -sdk iphonesimulator7.0 ONLY_ACTIVE_ARCH=NO TEST_AFTER_BUILD=YES clean build
