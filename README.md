@@ -1,6 +1,8 @@
 AFWunderlist
 ============
 
+[![Build Status](https://travis-ci.org/AlvaroFranco/AFWunderlist.svg?branch=master)](https://travis-ci.org/AlvaroFranco/AFWunderlist)
+
 A Wunderlist API wrapper for Objective-C
 
 ##CocoaPods
